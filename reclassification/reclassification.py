@@ -1,3 +1,5 @@
+#author: Theodore Morley
+#Date: Oct 25th 2023
 import pandas as pd
 
 def calculate_nri(outcome, prob_new, prob_old, cutoff):
