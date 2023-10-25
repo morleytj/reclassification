@@ -1,6 +1,6 @@
 import pandas as pd
 
-def calculate_nri(prob_new, prob_old, outcome, cutoff):
+def calculate_nri(outcome, prob_new, prob_old, cutoff):
     '''
     Input: Series with new probabilities, series with old probabilities, series with outcome, cutoff for NRI calculation.
     Output: NRI
@@ -15,7 +15,10 @@ def calculate_nri(prob_new, prob_old, outcome, cutoff):
     t_df.loc[((t_df.new_prob+cutoff)<t_df.old_prob), 'updown']=-1
     casenum=t_df.loc[t_df.outcome==1].shape[0]
     controlnum=t_df.loc[t_df.outcome==0].shape[0]
-    nri = (t_df.loc[(t_df.outcome==1)&(t_df.updown==1)].shape[0]/casenum-t_df.loc[(t_df.outcome==1)&(t_df.updown==-1)].shape[0]/casenum)+((t_df.loc[(t_df.outcome==0)&(t_df.updown==-1)].shape[0]/controlnum-t_df.loc[(t_df.outcome==0)&(t_df.updown==1)].shape[0]/controlnum))
+    try:
+        nri = (t_df.loc[(t_df.outcome==1)&(t_df.updown==1)].shape[0]/casenum-t_df.loc[(t_df.outcome==1)&(t_df.updown==-1)].shape[0]/casenum)+((t_df.loc[(t_df.outcome==0)&(t_df.updown==-1)].shape[0]/controlnum-t_df.loc[(t_df.outcome==0)&(t_df.updown==1)].shape[0]/controlnum))
+    except:
+        raise Exception("NRI undefined in this circumstance")
     return nri
 
 def calculate_idi_colname(probs, colname_cc, colname_prob_new, colname_prob_old):
@@ -47,3 +50,9 @@ def calculate_idi(case_status, new_probabilities, old_probabilities):
     meanControlOld = t_df.loc[t_df['outcome']==0, 'old_prob'].mean()
     idi = (meanCaseNew-meanControlNew)-(meanCaseOld-meanControlOld)
     return idi
+
+def test_idi():
+    assert calculate_idi([0,1,1,0],[0.2,0.6,0.3,0.1],[0.1,0.5,0.4,0.001]) == -0.09950000000000009
+
+def test_nri():
+    assert reclassification.calculate_nri([0,1,1,0],[0.2,0.6,0.3,0.1],[0.1,0.5,0.4,0.001],0) == -1.0
