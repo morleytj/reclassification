@@ -16,8 +16,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
+
 
     steps:
     - uses: actions/checkout@v3
@@ -39,5 +38,12 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-    - name: Publish package distributions to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
+  pypi-publish:
+    name: upload release to PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: pypi-publish
+        uses: pypa/gh-action-pypi-publish@v1.8.10
+            
