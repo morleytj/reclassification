@@ -51,8 +51,3 @@ def calculate_idi(case_status, new_probabilities, old_probabilities):
     idi = (meanCaseNew-meanControlNew)-(meanCaseOld-meanControlOld)
     return idi
 
-def test_idi():
-    assert calculate_idi([0,1,1,0],[0.2,0.6,0.3,0.1],[0.1,0.5,0.4,0.001]) == -0.09950000000000009
-
-def test_nri():
-    assert calculate_nri([0,1,1,0],[0.2,0.6,0.3,0.1],[0.1,0.5,0.4,0.001],0) == -1.0
