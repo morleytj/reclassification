@@ -1,5 +1,10 @@
 import pandas as pd
 
+'''
+Input: Series with new probabilities, series with old probabilities, series with outcome, cutoff for NRI calculation.
+Output: NRI
+Note: If cutoff is set to zero, this constitutes "continuous NRI".
+'''
 def calculate_nri(prob_new, prob_old, outcome, cutoff):
     t_df = pd.DataFrame()
     t_df['new_prob'] = prob_new
@@ -13,10 +18,32 @@ def calculate_nri(prob_new, prob_old, outcome, cutoff):
     nri = (t_df.loc[(t_df.outcome==1)&(t_df.updown==1)].shape[0]/casenum-t_df.loc[(t_df.outcome==1)&(t_df.updown==-1)].shape[0]/casenum)+((t_df.loc[(t_df.outcome==0)&(t_df.updown==-1)].shape[0]/controlnum-t_df.loc[(t_df.outcome==0)&(t_df.updown==1)].shape[0]/controlnum))
     return nri
 
-def calculate_idi(probs, colname_cc, colname_prob_new, colname_prob_old):
+'''
+Input: Dataframe containing outcome (named colname_cc), new probabilities (colname_prob_new), and old probabilities (named colname_prob_old), and those column names.
+Output: IDI
+'''
+def calculate_idi_colname(probs, colname_cc, colname_prob_new, colname_prob_old):
     meanCaseNew = probs.loc[probs[colname_cc]==1, colname_prob_new].mean()
     meanControlNew = probs.loc[probs[colname_cc]==0, colname_prob_new].mean()
     meanCaseOld = probs.loc[probs[colname_cc]==1, colname_prob_old].mean()
     meanControlOld = probs.loc[probs[colname_cc]==0, colname_prob_old].mean()
+    idi = (meanCaseNew-meanControlNew)-(meanCaseOld-meanControlOld)
+    return idi
+
+'''
+Input: Series containing case_status, series containing new probabilities, series containing old probabilities.
+Output: IDI
+'''
+def calculate_idi(case_status, new_probabilities, old_probabilities):
+    #set up working dataframe
+    t_df = pd.DataFrame()
+    t_df['new_prob']=new_probabilities
+    t_df['old_prob']=old_probabilities
+    t_df['outcome']=case_status
+    #calculate means
+    meanCaseNew = t_df.loc[t_df['outcome']==1, 'new_prob'].mean()
+    meanControlNew = t_df.loc[t_df['outcome']==0, 'new_prob'].mean()
+    meanCaseOld = t_df.loc[t_df['outcome']==1, 'old_prob'].mean()
+    meanControlOld = t_df.loc[t_df['outcome']==0, 'old_prob'].mean()
     idi = (meanCaseNew-meanControlNew)-(meanCaseOld-meanControlOld)
     return idi
