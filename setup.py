@@ -5,6 +5,7 @@ setup(
   version = '0.2',      # Start with a small number and increase it with every change you make
   license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
   description = 'Functions for calculation of reclassification metrics NRI and IDI.',   # Give a short description about your library
+  long_description = 'Defines NRI(Net reclassification index) and IDI(Integrated discrimination improvement)'
   author = 'Theodore Morley',                   # Type in your name
   author_email = 'ted@elmgatefarm.com',      # Type in your E-Mail
   url = 'https://github.com/user/morleytj',   # Provide either the link to your github or to your website
